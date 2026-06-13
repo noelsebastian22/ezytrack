@@ -1,0 +1,27 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { siteContent } from "@/data/siteContent";
+
+const { companyName } = siteContent.global;
+const { headline, subheadline } = siteContent.hero;
+---
+
+<Layout>
+  <main class="flex min-h-screen flex-col items-center justify-center px-4 py-24 text-center md:px-8">
+    <h1 class="text-4xl font-bold text-text-primary md:text-5xl">
+      {companyName}
+    </h1>
+    <h2 class="mt-4 text-2xl font-semibold text-text-secondary md:text-3xl">
+      {headline}
+    </h2>
+    <p class="mt-6 max-w-2xl text-lg text-text-secondary">
+      {subheadline}
+    </p>
+    <a
+      href="#"
+      class="mt-8 inline-flex rounded-full bg-brand px-6 py-3 font-semibold text-brand-foreground transition-colors hover:bg-brand-hover"
+    >
+      {siteContent.hero.primaryCta}
+    </a>
+  </main>
+</Layout>
