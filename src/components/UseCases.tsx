@@ -7,7 +7,7 @@ const ctaHref = `mailto:${siteContent.global.contactEmail}?subject=Quote%20enqui
 
 export default function UseCases() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [activeTabId, setActiveTabId] = useState(tabs[0]?.id ?? "");
   const [isImageReady, setIsImageReady] = useState(true);
   const [imageError, setImageError] = useState(false);

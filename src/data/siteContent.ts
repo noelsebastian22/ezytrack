@@ -80,6 +80,7 @@ export type SiteContent = {
     paragraphs: string[];
     ctaText: string;
     imageSrc: string;
+    imageAlt: string;
   };
   featuresChecklist: {
     title: string;
@@ -310,8 +311,8 @@ export const siteContent: SiteContent = {
       },
       {
         id: "gal-6",
-        src: "https://images.unsplash.com/photo-1560170433-c001ac2b4cb1?auto=format&fit=crop&w=1000&q=80",
-        alt: "Driver checking route on tablet",
+        src: "https://images.unsplash.com/photo-1482029255085-35a4a48b7084?auto=format&fit=crop&w=1000&q=80",
+        alt: "Driver navigating with GPS",
       },
     ],
   },

@@ -1,32 +1,36 @@
-# Memory — Review Fixes + Gallery Alignment
+# Memory — Review Cleanup & Broken Image Fix
 
 Last updated: 2026-06-13
 
 ## What was built
 
-- Fixed `--color-border-active: #00C853` → `#E60000` in `src/styles/globals.css` — completing the design revert.
-- Removed dead `--color-banner-start` / `--color-banner-end` CSS tokens from `src/styles/globals.css` — zero source references after the earlier revert.
-- Added Gallery empty state in `src/components/Gallery.tsx` — when `images.length === 0`, renders "No gallery images available yet." instead of blank section.
-- Fixed Gallery image misalignment — added `aspect-[4/3]` to the loaded `<img>` tag, matching the loading spinner aspect ratio so all images render at consistent height in the masonry grid.
+Fixed all remaining review issues + broken gallery image:
+
+- **`src/components/Hero.astro`** line 29 — `text-white/90` → `text-text-inverse-muted`
+- **`src/styles/globals.css`** — removed dead `--color-banner-start` / `--color-banner-end` tokens (zero source references)
+- **`src/data/siteContent.ts`** gallery image 6 — replaced dead Unsplash URL (`1560170433-c001ac2b4cb1` → 404) with working `1482029255085-35a4a48b7084` ("Driver navigating with GPS")
 
 ## Decisions made
 
-- Gallery images use `aspect-[4/3]` as the enforced ratio for masonry consistency. Loading spinner and loaded image now share the same aspect box.
+- Dead Unsplash image replaced with a working one from the same source — a driver with GPS in-car shot. Alt text updated to match new image content.
 
 ## Problems solved
 
-- Gallery misalignment root cause: loaded `<img>` had `object-cover` but no height constraint. Each image rendered at its natural aspect ratio, breaking the masonry column flow. Fixed by adding `aspect-[4/3]`.
+- Hero subheadline was still using raw `text-white/90` instead of the design token `text-text-inverse-muted` — missed during Feature 12 token cleanup
+- Dead CSS custom properties (`--color-banner-start`, `--color-banner-end`) were defined in globals.css but never referenced anywhere — safe to remove
+- Gallery image "Driver checking route on tablet" was a broken 404 Unsplash URL — replaced with verified working URL
 
 ## Current state
 
-All four review issues from the previous session are resolved. `npm run build` passes clean. All Phases 1-4 complete. Gallery masonry grid is visually aligned at all breakpoints.
+All review issues resolved. `npm run build` passes clean. Site is production-ready.
 
-**Remaining minor issue:**
-- Shared image-error fallback weakness — broken images render with no visual recovery (affects Gallery, SoftwareShowcase, UseCases).
+2 minor non-blocking issues remain:
+- `text-text-inverse/90` in FeaturesChecklist.tsx line 74 — off-standard, should be `text-text-inverse-muted`
+- `ui-registry.md` is stale — references pre-fix values
 
 ## Next session starts with
 
-Zoho SalesIQ integration or responsive QA pass, whichever comes first.
+Site is ready. Either deploy/ship, or clean up the 2 minor issues (FeaturesChecklist token + stale ui-registry.md).
 
 ## Open questions
 

@@ -13,7 +13,7 @@ const iconMap: Record<string, ComponentType<{ className?: string }>> = {
 
 export default function FeaturesChecklist() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
 
   useEffect(() => {
     const section = sectionRef.current;

@@ -38,10 +38,6 @@ html {
   --color-surface-dark: #12151C;
   --color-surface-dark-elevated: #1C1F26;
 
-  /* Banner Gradient (Deep Blue) */
-  --color-banner-start: #003399;
-  --color-banner-end: #0047AB;
-
   /* Borders */
   --color-border: #E5E7EB;
   --color-border-dark: #2A2E39;

@@ -30,14 +30,18 @@ const ctaHref = `mailto:${siteContent.global.contactEmail}?subject=Quote%20enqui
       </div>
 
       <div class="order-1 lg:order-2">
-        <div class="aspect-[4/3] overflow-hidden rounded-2xl shadow-float">
+        <div class="aspect-[4/3] overflow-hidden rounded-2xl shadow-float relative">
           <img
             src={imageSrc}
             alt={imageAlt}
             class="h-full w-full object-cover"
             loading="lazy"
             decoding="async"
+            onerror="this.hidden=true;this.nextElementSibling.hidden=false"
           />
+          <div hidden class="absolute inset-0 flex items-center justify-center bg-surface-muted">
+            <span class="text-sm text-text-muted">Image unavailable</span>
+          </div>
         </div>
       </div>
     </div>

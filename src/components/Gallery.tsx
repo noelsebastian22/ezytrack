@@ -8,8 +8,9 @@ export default function Gallery() {
   const sectionRef = useRef<HTMLElement>(null);
   const lightboxRef = useRef<HTMLDivElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [loaded, setLoaded] = useState<Set<string>>(new Set());
+  const [errors, setErrors] = useState<Set<string>>(new Set());
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
@@ -34,7 +35,10 @@ export default function Gallery() {
     images.forEach((image) => {
       const img = new Image();
       img.onload = () => setLoaded((prev) => new Set(prev).add(image.src));
-      img.onerror = () => setLoaded((prev) => new Set(prev).add(image.src));
+      img.onerror = () => {
+        setLoaded((prev) => new Set(prev).add(image.src));
+        setErrors((prev) => new Set(prev).add(image.src));
+      };
       img.src = image.src;
     });
   }, []);
@@ -154,7 +158,11 @@ export default function Gallery() {
                 aria-label={`View ${image.alt}`}
               >
                 <div className="relative overflow-hidden rounded-2xl bg-surface-muted">
-                  {loaded.has(image.src) ? (
+                  {errors.has(image.src) ? (
+                    <div className="flex aspect-[4/3] w-full items-center justify-center bg-surface-muted">
+                      <span className="text-sm text-text-muted">Image unavailable</span>
+                    </div>
+                  ) : loaded.has(image.src) ? (
                     <img
                       src={image.src}
                       alt={image.alt}
@@ -169,7 +177,7 @@ export default function Gallery() {
                   )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 text-left opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <p className="text-sm font-medium text-white">{image.alt}</p>
+                    <p className="text-sm font-medium text-text-inverse">{image.alt}</p>
                   </div>
                 </div>
               </button>
@@ -189,7 +197,7 @@ export default function Gallery() {
         >
           <button
             onClick={closeLightbox}
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-text-inverse transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             aria-label="Close"
           >
             <X className="size-6" />
@@ -197,7 +205,7 @@ export default function Gallery() {
 
           <button
             onClick={goPrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-text-inverse transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             aria-label="Previous image"
           >
             <ChevronLeft className="size-6" />
@@ -205,19 +213,26 @@ export default function Gallery() {
 
           <button
             onClick={goNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-white transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-text-inverse transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
             aria-label="Next image"
           >
             <ChevronRight className="size-6" />
           </button>
 
-          <img
-            src={images[lightboxIndex].src}
-            alt={images[lightboxIndex].alt}
-            className="max-h-full max-w-full rounded-lg object-contain"
-          />
+          {errors.has(images[lightboxIndex].src) ? (
+            <div className="flex items-center justify-center rounded-lg bg-white/5 px-8 py-12 text-text-inverse-muted">
+              Image unavailable
+            </div>
+          ) : (
+            <img
+              src={images[lightboxIndex].src}
+              alt={images[lightboxIndex].alt}
+              className="max-h-full max-w-full rounded-lg object-contain"
+              onError={() => setErrors((prev) => new Set(prev).add(images[lightboxIndex].src))}
+            />
+          )}
 
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-2 text-sm text-white">
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-2 text-sm text-text-inverse">
             {lightboxIndex + 1} / {images.length}
           </div>
         </div>

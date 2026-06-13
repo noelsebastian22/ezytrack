@@ -6,11 +6,11 @@ const { title, description, tabs } = siteContent.softwareShowcase;
 export default function SoftwareShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const preloadRef = useRef<Set<string>>(new Set());
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
   const [activeTabId, setActiveTabId] = useState(tabs[0]?.id ?? "");
   const [isImageReady, setIsImageReady] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
-  // Preload all tab images so first tab switch doesn't flash
   useEffect(() => {
     tabs.forEach((tab) => {
       if (preloadRef.current.has(tab.imageSrc)) return;
@@ -38,25 +38,31 @@ export default function SoftwareShowcase() {
     return () => observer.disconnect();
   }, []);
 
-  // Fade the image while confirming the new tab image is cached
   useEffect(() => {
     const activeTab = tabs.find((t) => t.id === activeTabId);
     if (!activeTab) return;
+
     setIsImageReady(false);
+    setImageError(false);
 
     const img = new Image();
     img.src = activeTab.imageSrc;
 
-    const handleDone = () => setIsImageReady(true);
+    const handleLoad = () => setIsImageReady(true);
+    const handleError = () => {
+      setIsImageReady(true);
+      setImageError(true);
+    };
+
     if (img.complete) {
-      handleDone();
+      handleLoad();
     } else {
-      img.addEventListener("load", handleDone);
-      img.addEventListener("error", handleDone);
+      img.addEventListener("load", handleLoad);
+      img.addEventListener("error", handleError);
     }
     return () => {
-      img.removeEventListener("load", handleDone);
-      img.removeEventListener("error", handleDone);
+      img.removeEventListener("load", handleLoad);
+      img.removeEventListener("error", handleError);
     };
   }, [activeTabId]);
 
@@ -135,27 +141,33 @@ export default function SoftwareShowcase() {
             style={{ animationDelay: "300ms" }}
           >
             <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl bg-surface-muted shadow-float">
-              {tabs.map((tab) => (
-                <div
-                  key={tab.id}
-                  id={`panel-${tab.id}`}
-                  role="tabpanel"
-                  aria-labelledby={`tab-${tab.id}`}
-                  className={`absolute inset-0 transition-opacity duration-300 ease-in-out ${
-                    tab.id === activeTabId ? "opacity-100" : "opacity-0"
-                  }`}
-                >
-                  <img
-                    src={tab.imageSrc}
-                    alt={`${tab.label} dashboard preview`}
-                    className={`h-full w-full object-cover transition-opacity duration-300 ${
-                      isImageReady ? "opacity-100" : "opacity-0"
-                    }`}
-                    loading="lazy"
-                    decoding="async"
-                  />
+              {imageError ? (
+                <div className="flex h-full w-full items-center justify-center bg-surface-muted text-text-muted text-sm">
+                  Image unavailable
                 </div>
-              ))}
+              ) : (
+                tabs.map((tab) => (
+                  <div
+                    key={tab.id}
+                    id={`panel-${tab.id}`}
+                    role="tabpanel"
+                    aria-labelledby={`tab-${tab.id}`}
+                    className={`absolute inset-0 transition-opacity duration-300 ease-in-out ${
+                      tab.id === activeTabId ? "opacity-100" : "opacity-0"
+                    }`}
+                  >
+                    <img
+                      src={tab.imageSrc}
+                      alt={`${tab.label} dashboard preview`}
+                      className={`h-full w-full object-cover transition-opacity duration-300 ${
+                        isImageReady ? "opacity-100" : "opacity-0"
+                      }`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
