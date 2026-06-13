@@ -37,6 +37,7 @@ type FeatureMockup = {
   label: string;
   value: string;
   iconName: string;
+  position: { top?: string; bottom?: string; left?: string; right?: string };
 };
 
 type GalleryImage = {
@@ -203,9 +204,9 @@ export const siteContent: SiteContent = {
     ],
     ctaText: "Get a quote",
     mockups: [
-      { id: "mockup-1", label: "Vehicles online", value: "42", iconName: "MapPin" },
-      { id: "mockup-2", label: "Fleet speed", value: "87 km/h", iconName: "Gauge" },
-      { id: "mockup-3", label: "Active alerts", value: "3", iconName: "Bell" },
+      { id: "mockup-1", label: "Vehicles online", value: "42", iconName: "MapPin", position: { top: "0.75rem", left: "0.75rem" } },
+      { id: "mockup-2", label: "Avg speed", value: "87 km/h", iconName: "Gauge", position: { top: "0.75rem", right: "0.75rem" } },
+      { id: "mockup-3", label: "Active alerts", value: "3", iconName: "Bell", position: { bottom: "0.75rem", left: "0.75rem" } },
     ],
   },
 

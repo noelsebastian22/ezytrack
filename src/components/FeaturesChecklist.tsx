@@ -87,35 +87,111 @@ export default function FeaturesChecklist() {
             </a>
           </div>
 
-          <div className="relative mx-auto h-80 w-full max-w-md lg:h-96 lg:max-w-full">
-            {mockups.map((mockup, index) => {
-              const Icon = iconMap[mockup.iconName] ?? MapPin;
-              const positionMap: Record<string, string> = {
-                "mockup-1": "left-0 top-0 rotate-[-6deg]",
-                "mockup-2": "right-4 top-16 rotate-[4deg] lg:right-8",
-                "mockup-3": "left-8 bottom-0 rotate-[-3deg] lg:left-16",
-              };
+          {/* Map illustration */}
+          <div
+            className={`relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden rounded-2xl border border-border-dark bg-[#0D1117] lg:aspect-[5/4] lg:max-w-full ${
+              visible ? "animate-fade-in-up" : "opacity-0"
+            }`}
+            style={{ animationDelay: "300ms" }}
+          >
+            <svg
+              className="h-full w-full"
+              viewBox="0 0 500 375"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* Grid lines */}
+              {Array.from({ length: 11 }).map((_, i) => (
+                <line
+                  key={`h-${i}`}
+                  x1={0}
+                  y1={i * 37.5}
+                  x2={500}
+                  y2={i * 37.5}
+                  stroke="#1C1F26"
+                  strokeWidth="0.5"
+                />
+              ))}
+              {Array.from({ length: 14 }).map((_, i) => (
+                <line
+                  key={`v-${i}`}
+                  x1={i * 38.46}
+                  y1={0}
+                  x2={i * 38.46}
+                  y2={375}
+                  stroke="#1C1F26"
+                  strokeWidth="0.5"
+                />
+              ))}
 
-              return (
-                <div
-                  key={mockup.id}
-                  className={`absolute w-56 rounded-2xl border border-border-dark bg-surface-dark-elevated p-5 shadow-float ${
-                    positionMap[mockup.id] ?? ""
-                  } ${visible ? "animate-fade-in-up" : "opacity-0"}`}
-                  style={{ animationDelay: `${300 + index * 150}ms` }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand/10">
-                      <Icon className="size-5 text-brand" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-text-inverse-muted">{mockup.label}</p>
-                      <p className="text-xl font-bold text-text-inverse">{mockup.value}</p>
+              {/* Route lines — primary */}
+              <path d="M40,340 L150,200 L280,120 L420,60" stroke="#E60000" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
+              <path d="M420,60 L470,80" stroke="#E60000" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.7" />
+
+              {/* Route lines — secondary */}
+              <path d="M60,60 L180,60 L250,160 L380,140 L480,180" stroke="#2A2E39" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="6 4" opacity="0.6" />
+              <path d="M180,60 L250,160" stroke="#2A2E39" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" opacity="0.4" />
+              <path d="M30,160 L80,140 L140,240 L250,280" stroke="#2A2E39" strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeDasharray="6 4" opacity="0.5" />
+
+              {/* Major roads */}
+              <line x1={0} y1={200} x2={500} y2={180} stroke="#1C1F26" strokeWidth="3" />
+              <line x1={180} y1={0} x2={200} y2={375} stroke="#1C1F26" strokeWidth="3" />
+              <line x1={380} y1={0} x2={370} y2={375} stroke="#1C1F26" strokeWidth="2.5" />
+
+              {/* Vehicle markers */}
+              {[
+                { x: 150, y: 200 }, { x: 280, y: 120 }, { x: 420, y: 60 },
+                { x: 80, y: 140 }, { x: 250, y: 280 }, { x: 200, y: 90 },
+                { x: 340, y: 240 }, { x: 440, y: 300 },
+              ].map((pos, i) => (
+                <g key={`v-${i}`}>
+                  <circle cx={pos.x} cy={pos.y} r="5" fill="#E60000" opacity="0.15" />
+                  <circle cx={pos.x} cy={pos.y} r="2.5" fill="#E60000" />
+                  {(i === 0 || i === 1 || i === 2) && (
+                    <circle cx={pos.x} cy={pos.y} r="7" fill="none" stroke="#E60000" strokeWidth="1" opacity="0.3">
+                      <animate attributeName="r" from="7" to="12" dur="2s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" from="0.3" to="0" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                  )}
+                </g>
+              ))}
+
+              {/* Destination marker */}
+              <circle cx={470} cy={80} r="6" fill="none" stroke="#E60000" strokeWidth="2" />
+              <circle cx={470} cy={80} r="2" fill="#E60000" />
+            </svg>
+
+            {/* Stat overlay chips */}
+            <div className="absolute inset-0 z-10">
+              {mockups.map((mockup, index) => {
+                const Icon = iconMap[mockup.iconName] ?? MapPin;
+                const style: React.CSSProperties = {};
+                if (mockup.position.top) style.top = mockup.position.top;
+                if (mockup.position.bottom) style.bottom = mockup.position.bottom;
+                if (mockup.position.left) style.left = mockup.position.left;
+                if (mockup.position.right) style.right = mockup.position.right;
+
+                return (
+                  <div
+                    key={mockup.id}
+                    className={`absolute rounded-xl border border-border-dark bg-surface-dark-elevated/90 px-4 py-3 backdrop-blur-sm shadow-float ${
+                      visible ? "animate-fade-in-up" : "opacity-0"
+                    }`}
+                    style={{ ...style, animationDelay: `${500 + index * 150}ms` }}
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand/10">
+                        <Icon className="size-4 text-brand" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-text-inverse-muted">{mockup.label}</p>
+                        <p className="text-lg font-bold text-text-inverse">{mockup.value}</p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
