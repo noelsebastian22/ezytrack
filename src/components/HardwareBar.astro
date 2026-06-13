@@ -1,0 +1,50 @@
+---
+import type { ComponentType } from "react";
+import { siteContent } from "@/data/siteContent";
+import {
+  Signal,
+  ShieldCheck,
+  BatteryCharging,
+  Fingerprint,
+  CircleHelp,
+} from "lucide-react";
+
+const { title, subtitle, specs } = siteContent.hardwareBar;
+
+const iconMap: Record<string, ComponentType<{ className?: string }>> = {
+  "4G/5G Connectivity": Signal,
+  "Rugged Design": ShieldCheck,
+  "Battery Backup": BatteryCharging,
+  "Driver ID": Fingerprint,
+};
+---
+
+<section id="hardware" class="w-full bg-surface-dark py-16 md:py-20">
+  <div class="mx-auto max-w-7xl px-4 md:px-8">
+    <div class="text-center">
+      <h2 class="text-3xl font-bold text-text-inverse md:text-4xl">{title}</h2>
+      <p class="mt-3 text-lg text-text-inverse-muted">{subtitle}</p>
+    </div>
+
+    <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      {
+        specs.map((spec) => {
+          const Icon = iconMap[spec.title];
+          return (
+            <div class="flex flex-col items-center text-center">
+              <div class="flex h-14 w-14 items-center justify-center rounded-full bg-surface-dark-elevated">
+                {Icon ? <Icon className="size-7 text-brand" /> : <CircleHelp className="size-7 text-brand" />}
+              </div>
+              <h3 class="mt-4 text-lg font-semibold text-text-inverse">
+                {spec.title}
+              </h3>
+              <p class="mt-1 text-base text-text-inverse-muted">
+                {spec.description}
+              </p>
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

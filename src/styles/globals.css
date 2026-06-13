@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.7s ease-out forwards;
+}
+
 @theme {
   /* Font */
   --font-sans: "Inter", system-ui, sans-serif;
@@ -18,6 +37,10 @@
   /* Dark Mode Surfaces */
   --color-surface-dark: #12151C;
   --color-surface-dark-elevated: #1C1F26;
+
+  /* Banner Gradient (Deep Blue) */
+  --color-banner-start: #003399;
+  --color-banner-end: #0047AB;
 
   /* Borders */
   --color-border: #E5E7EB;

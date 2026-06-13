@@ -32,6 +32,13 @@ type UseCaseTab = {
   imageSrc: string;
 };
 
+type FeatureMockup = {
+  id: string;
+  label: string;
+  value: string;
+  iconName: string;
+};
+
 type GalleryImage = {
   id: string;
   src: string;
@@ -79,6 +86,7 @@ export type SiteContent = {
     subtitle: string;
     items: string[];
     ctaText: string;
+    mockups: FeatureMockup[];
   };
   softwareShowcase: {
     title: string;
@@ -177,7 +185,8 @@ export const siteContent: SiteContent = {
     ],
     ctaText: "Discover the benefits",
     imageSrc:
-      "https://images.unsplash.com/photo-1612810806563-4cb8265db55b?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80",
+    imageAlt: "Fleet vehicle equipped with GPS tracking technology",
   },
 
   featuresChecklist: {
@@ -192,6 +201,11 @@ export const siteContent: SiteContent = {
       "Integrated Dashcams: High-definition video evidence for accident resolution.",
     ],
     ctaText: "Get a quote",
+    mockups: [
+      { id: "mockup-1", label: "Vehicles online", value: "42", iconName: "MapPin" },
+      { id: "mockup-2", label: "Fleet speed", value: "87 km/h", iconName: "Gauge" },
+      { id: "mockup-3", label: "Active alerts", value: "3", iconName: "Bell" },
+    ],
   },
 
   softwareShowcase: {
@@ -249,7 +263,7 @@ export const siteContent: SiteContent = {
         features: ["Geofence alerts", "Long battery life", "Rugged enclosures"],
         ctaText: "Explore Asset Tracking",
         imageSrc:
-          "https://images.unsplash.com/photo-1541888086225-c64a5c53b271?auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=800&q=80",
       },
       {
         id: "usecase-dashcam",
