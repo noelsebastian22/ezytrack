@@ -3,7 +3,7 @@ import { siteContent } from "@/data/siteContent";
 import { Check, MapPin, Gauge, Bell } from "lucide-react";
 
 const { title, subtitle, items, ctaText, mockups } = siteContent.featuresChecklist;
-const ctaHref = `mailto:${siteContent.global.contactEmail}?subject=Quote%20enquiry`;
+const ctaHref = "#quote-form";
 
 const iconMap: Record<string, ComponentType<{ className?: string }>> = {
   MapPin,

@@ -46,6 +46,15 @@ type GalleryImage = {
   alt: string;
 };
 
+type FormField = {
+  name: string;
+  type: "text" | "email" | "tel" | "select" | "textarea";
+  label: string;
+  placeholder: string;
+  required: boolean;
+  options?: { value: string; label: string }[];
+};
+
 type FooterColumn = {
   title: string;
   links: NavLink[];
@@ -104,6 +113,15 @@ export type SiteContent = {
     subtitle: string;
     images: GalleryImage[];
   };
+  quoteForm: {
+    sectionTitle: string;
+    sectionSubtitle: string;
+    fields: FormField[];
+    submitLabel: string;
+    successTitle: string;
+    successMessage: string;
+    privacyNote: string;
+  };
   footer: {
     description: string;
     columns: FooterColumn[];
@@ -121,8 +139,8 @@ export const siteContent: SiteContent = {
   },
 
   navigation: [
-    { label: "Features", href: "#features" },
     { label: "Hardware", href: "#hardware" },
+    { label: "Features", href: "#features" },
     { label: "Solutions", href: "#solutions" },
     { label: "Gallery", href: "#gallery" },
   ],
@@ -316,6 +334,67 @@ export const siteContent: SiteContent = {
         alt: "Driver navigating with GPS",
       },
     ],
+  },
+
+  quoteForm: {
+    sectionTitle: "Get a quote",
+    sectionSubtitle: "Tell us about your fleet and we'll put together a tailored solution for your business.",
+    fields: [
+      {
+        name: "name",
+        type: "text",
+        label: "Full name",
+        placeholder: "John Smith",
+        required: true,
+      },
+      {
+        name: "email",
+        type: "email",
+        label: "Email address",
+        placeholder: "john@company.com.au",
+        required: true,
+      },
+      {
+        name: "phone",
+        type: "tel",
+        label: "Phone number",
+        placeholder: "0400 000 000",
+        required: true,
+      },
+      {
+        name: "company",
+        type: "text",
+        label: "Company name",
+        placeholder: "Smith Logistics Pty Ltd",
+        required: true,
+      },
+      {
+        name: "fleetSize",
+        type: "select",
+        label: "Fleet size",
+        placeholder: "Select fleet size",
+        required: true,
+        options: [
+          { value: "", label: "Select fleet size" },
+          { value: "1-5", label: "1–5 vehicles" },
+          { value: "6-20", label: "6–20 vehicles" },
+          { value: "21-50", label: "21–50 vehicles" },
+          { value: "51-100", label: "51–100 vehicles" },
+          { value: "100+", label: "100+ vehicles" },
+        ],
+      },
+      {
+        name: "message",
+        type: "textarea",
+        label: "Message",
+        placeholder: "Tell us about your tracking needs, current setup, or any questions you have…",
+        required: false,
+      },
+    ],
+    submitLabel: "Send enquiry",
+    successTitle: "Thanks for your enquiry",
+    successMessage: "We'll review your details and get back to you within one business day with a tailored quote.",
+    privacyNote: "We respect your privacy and will never share your details.",
   },
 
   footer: {

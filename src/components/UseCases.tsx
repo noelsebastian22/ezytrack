@@ -3,14 +3,14 @@ import { siteContent } from "@/data/siteContent";
 import { Check } from "lucide-react";
 
 const { title, tabs } = siteContent.useCases;
-const ctaHref = `mailto:${siteContent.global.contactEmail}?subject=Quote%20enquiry`;
+const ctaHref = "#quote-form";
 
 export default function UseCases() {
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(true);
   const [activeTabId, setActiveTabId] = useState(tabs[0]?.id ?? "");
   const [isImageReady, setIsImageReady] = useState(true);
-  const [imageError, setImageError] = useState(false);
+  const [erroredTabs, setErroredTabs] = useState<Set<string>>(new Set());
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
 
   // Preload all tab images so switching tabs never causes a layout jump
@@ -44,14 +44,13 @@ export default function UseCases() {
     if (!activeTab) return;
 
     setIsImageReady(false);
-    setImageError(false);
 
     const img = new Image();
     img.src = activeTab.imageSrc;
 
     const handleLoad = () => setIsImageReady(true);
     const handleError = () => {
-      setImageError(true);
+      setErroredTabs((prev) => new Set(prev).add(activeTab.id));
       setIsImageReady(true);
     };
 
@@ -152,7 +151,7 @@ export default function UseCases() {
 
               <div className="order-1 lg:order-2">
                 <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-surface shadow-float">
-                  {imageError && tab.id === activeTabId ? (
+                  {erroredTabs.has(tab.id) ? (
                     <div className="flex h-full w-full items-center justify-center bg-surface-muted text-text-muted text-sm">
                       Image unavailable
                     </div>
@@ -164,7 +163,7 @@ export default function UseCases() {
                         }`}
                       loading="eager"
                       decoding="async"
-                      onError={() => setImageError(true)}
+                      onError={() => setErroredTabs((prev) => new Set(prev).add(tab.id))}
                     />
                   )}
                 </div>
