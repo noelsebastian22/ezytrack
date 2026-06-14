@@ -22,16 +22,16 @@ const iconMap: Record<string, ComponentType<{ className?: string }>> = {
 <section id="hardware" class="w-full bg-surface-dark py-16 md:py-24">
   <div class="mx-auto max-w-7xl px-4 md:px-8">
     <div class="text-center">
-      <h2 class="text-3xl font-bold text-text-inverse md:text-4xl">{title}</h2>
-      <p class="mt-3 text-lg text-text-inverse-muted">{subtitle}</p>
+      <h2 class="text-3xl font-bold text-text-inverse md:text-4xl opacity-0 animate-fade-in-up">{title}</h2>
+      <p class="mt-3 text-lg text-text-inverse-muted opacity-0 animate-fade-in-up" style="animation-delay: 100ms">{subtitle}</p>
     </div>
 
     <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
       {
-        specs.map((spec) => {
+        specs.map((spec, index) => {
           const Icon = iconMap[spec.title];
           return (
-            <div class="flex flex-col items-center text-center">
+            <div class="flex flex-col items-center text-center opacity-0 animate-fade-in-up" style={`animation-delay: ${200 + index * 100}ms`}>
               <div class="flex h-14 w-14 items-center justify-center rounded-full bg-surface-dark-elevated">
                 {Icon ? <Icon className="size-7 text-brand" /> : <CircleHelp className="size-7 text-brand" />}
               </div>

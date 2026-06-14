@@ -12,6 +12,8 @@ export default function Gallery() {
   const [loaded, setLoaded] = useState<Set<string>>(new Set());
   const [errors, setErrors] = useState<Set<string>>(new Set());
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [closing, setClosing] = useState(false);
+  const [imageVisible, setImageVisible] = useState(true);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -45,25 +47,39 @@ export default function Gallery() {
 
   const openLightbox = useCallback((index: number) => {
     previousFocusRef.current = document.activeElement as HTMLElement;
+    setClosing(false);
     setLightboxIndex(index);
+    setImageVisible(true);
   }, []);
 
   const closeLightbox = useCallback(() => {
-    setLightboxIndex(null);
-    requestAnimationFrame(() => {
-      previousFocusRef.current?.focus();
-      previousFocusRef.current = null;
-    });
+    setClosing(true);
+    setTimeout(() => {
+      setLightboxIndex(null);
+      setClosing(false);
+      requestAnimationFrame(() => {
+        previousFocusRef.current?.focus();
+        previousFocusRef.current = null;
+      });
+    }, 200);
   }, []);
 
   const goNext = useCallback(() => {
-    setLightboxIndex((prev) => (prev !== null ? (prev + 1) % images.length : null));
+    setImageVisible(false);
+    setTimeout(() => {
+      setLightboxIndex((prev) => (prev !== null ? (prev + 1) % images.length : null));
+      requestAnimationFrame(() => setImageVisible(true));
+    }, 150);
   }, []);
 
   const goPrev = useCallback(() => {
-    setLightboxIndex((prev) =>
-      prev !== null ? (prev - 1 + images.length) % images.length : null
-    );
+    setImageVisible(false);
+    setTimeout(() => {
+      setLightboxIndex((prev) =>
+        prev !== null ? (prev - 1 + images.length) % images.length : null
+      );
+      requestAnimationFrame(() => setImageVisible(true));
+    }, 150);
   }, []);
 
   useEffect(() => {
@@ -192,12 +208,16 @@ export default function Gallery() {
           role="dialog"
           aria-modal="true"
           aria-label="Image viewer"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 md:p-8"
+          className={`fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8 ${
+            closing ? "bg-black/0 transition-colors duration-200" : "bg-black/90 animate-fade-in"
+          }`}
           onClick={handleBackdropClick}
         >
           <button
             onClick={closeLightbox}
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-text-inverse transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className={`absolute right-4 top-4 rounded-full bg-white/10 p-2 text-text-inverse transition-all duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
+              closing ? "opacity-0" : ""
+            }`}
             aria-label="Close"
           >
             <X className="size-6" />
@@ -205,7 +225,9 @@ export default function Gallery() {
 
           <button
             onClick={goPrev}
-            className="absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-text-inverse transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className={`absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-text-inverse transition-all duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
+              closing ? "opacity-0" : ""
+            }`}
             aria-label="Previous image"
           >
             <ChevronLeft className="size-6" />
@@ -213,7 +235,9 @@ export default function Gallery() {
 
           <button
             onClick={goNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-text-inverse transition-colors hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand"
+            className={`absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-white/10 p-3 text-text-inverse transition-all duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand ${
+              closing ? "opacity-0" : ""
+            }`}
             aria-label="Next image"
           >
             <ChevronRight className="size-6" />
@@ -227,12 +251,16 @@ export default function Gallery() {
             <img
               src={images[lightboxIndex].src}
               alt={images[lightboxIndex].alt}
-              className="max-h-full max-w-full rounded-lg object-contain"
+              className={`max-h-full max-w-full rounded-lg object-contain transition-all duration-200 ${
+                closing ? "opacity-0 scale-95" : imageVisible ? "animate-scale-in" : "opacity-0"
+              }`}
               onError={() => setErrors((prev) => new Set(prev).add(images[lightboxIndex].src))}
             />
           )}
 
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-2 text-sm text-text-inverse">
+          <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-2 text-sm text-text-inverse transition-opacity duration-200 ${
+            closing ? "opacity-0" : ""
+          }`}>
             {lightboxIndex + 1} / {images.length}
           </div>
         </div>

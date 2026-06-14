@@ -20,9 +20,27 @@ export default function MobileMenu({
   ctaHref,
 }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [closing, setClosing] = useState(false);
 
-  const toggle = () => setIsOpen((prev) => !prev);
-  const close = () => setIsOpen(false);
+  const toggle = () => {
+    if (isOpen) {
+      setClosing(true);
+      setTimeout(() => {
+        setIsOpen(false);
+        setClosing(false);
+      }, 180);
+    } else {
+      setIsOpen(true);
+    }
+  };
+
+  const close = () => {
+    setClosing(true);
+    setTimeout(() => {
+      setIsOpen(false);
+      setClosing(false);
+    }, 180);
+  };
 
   return (
     <div>
@@ -37,7 +55,9 @@ export default function MobileMenu({
       </button>
 
       {isOpen && (
-        <div className="fixed inset-x-0 top-[calc(4.5rem+1px)] bottom-0 z-40 border-b border-border bg-background shadow-float">
+        <div className={`fixed inset-x-0 top-[calc(4.5rem+1px)] bottom-0 z-40 border-b border-border bg-background shadow-float ${
+          closing ? "opacity-0 -translate-y-2 transition-all duration-200" : "animate-slide-down"
+        }`}>
           <nav className="flex flex-col gap-4 p-4">
             {navigation.map((link) => (
               <a

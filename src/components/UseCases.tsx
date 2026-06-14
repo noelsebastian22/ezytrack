@@ -77,17 +77,15 @@ export default function UseCases() {
     >
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <h2
-          className={`text-center text-3xl font-bold text-text-primary md:text-4xl ${
-            visible ? "animate-fade-in-up" : "opacity-0"
-          }`}
+          className={`text-center text-3xl font-bold text-text-primary md:text-4xl ${visible ? "animate-fade-in-up" : "opacity-0"
+            }`}
         >
           {title}
         </h2>
 
         <div
-          className={`mt-8 flex flex-wrap items-center justify-center gap-3 ${
-            visible ? "animate-fade-in-up" : "opacity-0"
-          }`}
+          className={`mt-8 flex flex-wrap items-center justify-center gap-3 ${visible ? "animate-fade-in-up" : "opacity-0"
+            }`}
           style={{ animationDelay: "100ms" }}
           role="tablist"
           aria-label="Industry use cases"
@@ -101,11 +99,10 @@ export default function UseCases() {
                 aria-selected={isActive}
                 aria-controls={`usecase-panel-${tab.id}`}
                 onClick={() => setActiveTabId(tab.id)}
-                className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-colors ${
-                  isActive
+                className={`rounded-full px-6 py-2.5 text-sm font-semibold transition-colors ${isActive
                     ? "bg-brand text-brand-foreground"
                     : "bg-surface text-text-secondary hover:bg-border"
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>
@@ -113,65 +110,68 @@ export default function UseCases() {
           })}
         </div>
 
-        {activeTab && (
-          <div
-            className={`mt-12 grid items-start gap-10 lg:grid-cols-2 lg:gap-16 ${
-              visible ? "animate-fade-in-up" : "opacity-0"
-            }`}
-            style={{ animationDelay: "200ms" }}
-            role="tabpanel"
-            id={`usecase-panel-${activeTabId}`}
-            aria-labelledby={`usecase-tab-${activeTabId}`}
-          >
-            <div className="order-2 flex flex-col justify-center lg:order-1 lg:min-h-[420px]">
-              <h3 className="text-2xl font-bold text-text-primary md:text-3xl">
-                {activeTab.headline}
-              </h3>
-              <p className="mt-4 text-lg text-text-secondary">
-                {activeTab.description}
-              </p>
+        <div
+          className={`relative mt-12 min-h-[420px] ${visible ? "animate-fade-in-up" : "opacity-0"}`}
+          style={{ animationDelay: "200ms" }}
+        >
+          {tabs.map((tab) => (
+            <div
+              key={tab.id}
+              role="tabpanel"
+              id={`usecase-panel-${tab.id}`}
+              aria-labelledby={`usecase-tab-${tab.id}`}
+              className={`grid items-start gap-10 lg:grid-cols-2 lg:gap-16 transition-opacity duration-300 ease-in-out ${tab.id === activeTabId ? "relative opacity-100" : "absolute inset-0 opacity-0 pointer-events-none"
+                }`}
+            >
+              <div className="order-2 flex flex-col lg:order-1 lg:min-h-[420px]">
+                <h3 className="text-2xl font-bold text-text-primary md:text-3xl">
+                  {tab.headline}
+                </h3>
+                <p className="mt-4 text-lg text-text-secondary">
+                  {tab.description}
+                </p>
 
-              <ul className="mt-6 space-y-3">
-                {activeTab.features.map((feature, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success">
-                      <Check className="size-3 text-surface-dark" strokeWidth={3} />
-                    </span>
-                    <span className="text-text-secondary">{feature}</span>
-                  </li>
-                ))}
-              </ul>
+                <ul className="mt-6 space-y-3">
+                  {tab.features.map((feature, index) => (
+                    <li key={index} className="flex items-center gap-3">
+                      <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-success">
+                        <Check className="size-3 text-surface-dark" strokeWidth={3} />
+                      </span>
+                      <span className="text-text-secondary">{feature}</span>
+                    </li>
+                  ))}
+                </ul>
 
-              <a
-                href={ctaHref}
-                className="mt-8 inline-flex items-center justify-center self-start rounded-full bg-brand px-8 py-3.5 text-base font-semibold text-brand-foreground transition-colors hover:bg-brand-hover"
-              >
-                {activeTab.ctaText}
-              </a>
-            </div>
+                <a
+                  href={ctaHref}
+                  className="mt-8 inline-flex items-center justify-center self-start rounded-full bg-brand px-8 py-3.5 text-base font-semibold text-brand-foreground transition-colors hover:bg-brand-hover"
+                >
+                  {tab.ctaText}
+                </a>
+              </div>
 
-            <div className="order-1 lg:order-2">
-              <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-surface shadow-float">
-                {imageError ? (
-                  <div className="flex h-full w-full items-center justify-center bg-surface-muted text-text-muted text-sm">
-                    Image unavailable
-                  </div>
-                ) : (
-                  <img
-                    src={activeTab.imageSrc}
-                    alt={`${activeTab.label} example`}
-                    className={`h-full w-full object-cover transition-opacity duration-500 ${
-                      isImageReady ? "opacity-100" : "opacity-0"
-                    }`}
-                    loading="eager"
-                    decoding="async"
-                    onError={() => setImageError(true)}
-                  />
-                )}
+              <div className="order-1 lg:order-2">
+                <div className="aspect-[4/3] overflow-hidden rounded-2xl bg-surface shadow-float">
+                  {imageError && tab.id === activeTabId ? (
+                    <div className="flex h-full w-full items-center justify-center bg-surface-muted text-text-muted text-sm">
+                      Image unavailable
+                    </div>
+                  ) : (
+                    <img
+                      src={tab.imageSrc}
+                      alt={`${tab.label} example`}
+                      className={`h-full w-full object-cover transition-opacity duration-500 ${tab.id === activeTabId && isImageReady ? "opacity-100" : "opacity-0"
+                        }`}
+                      loading="eager"
+                      decoding="async"
+                      onError={() => setImageError(true)}
+                    />
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </section>
   );
